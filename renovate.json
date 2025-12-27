@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>xpdustry/.github:renovate-shared",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "pinDigest": {
+    "schedule": [
+      "at any time"
+    ],
+    "automerge": true,
+    "automergeType": "pr"
+  }
+}

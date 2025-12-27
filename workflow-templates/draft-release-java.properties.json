@@ -1,0 +1,9 @@
+{
+  "name": "Draft Release (Java)",
+  "description": "Automatically create a draft GitHub release with changelogs for Java projects.",
+  "iconName": "rocket",
+  "categories": [
+    "Java",
+    "Release Management"
+  ]
+}

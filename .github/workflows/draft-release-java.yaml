@@ -1,0 +1,75 @@
+name: Draft Release (Java)
+
+on:
+  workflow_call:
+    inputs:
+      java_version:
+        description: 'The version of the jdk to use.'
+        type: number
+        default: 25
+        required: false
+      draft_version:
+        description: 'The draft version to use'
+        type: string
+        default: ''
+        required: false
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout Repository"
+        uses: actions/checkout@v6
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: "Setup Java ${{ inputs.java_version }}"
+        if: ${{ inputs.draft_version == '' }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: "${{ inputs.java_version }}"
+          distribution: "temurin"
+
+      - name: "Setup Gradle"
+        if: ${{ inputs.draft_version == '' }}
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: "Prepare Draft Version"
+        id: prepare
+        env:
+          DRAFT_VERSION: ${{ inputs.draft_version }}
+        run: |
+          if [ -z "$DRAFT_VERSION" ]; then
+            DRAFT_VERSION=$(./gradlew -q :properties | sed -n 's/^version: \([^-]*\).*/\1/p')
+          fi
+          echo "version=$DRAFT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: "Checkout CI Scripts"
+        uses: actions/checkout@v6
+        with:
+          repository: xpdustry/.github
+          path: .github/shared-ci
+          sparse-checkout: |
+            scripts/draft-release-java
+
+      - name: "Setup Python 3.13"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: "Generate Draft"
+        run: |
+          pip install -r .github/shared-ci/scripts/draft-release-java/requirements.txt
+          python .github/shared-ci/scripts/draft-release-java/action.py \
+            --output GENERATED_CHANGELOG.md \
+            --repository_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+
+      - name: "Publish Draft Release"
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "v${{ steps.prepare.outputs.version }}"
+          draft: true
+          tag_name: "v${{ steps.prepare.outputs.version }}"
+          body_path: "GENERATED_CHANGELOG.md"

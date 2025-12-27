@@ -3,6 +3,11 @@
     "extends": [
       "config:recommended"
     ],
+    "labels": [
+      "dependencies"
+    ],
+    "semanticCommitType": "build",
+    "commitMessagePrefix": "chore(deps): ",
     "packageRules": [
       {
         "matchDatasources": ["maven"],
@@ -13,11 +18,18 @@
         "matchDatasources": ["maven"],
         "registryUrls": ["https://maven.xpdustry.com/mindustry"],
         "matchPackagePrefixes": ["com.github.Anuken"]
+      },
+      {
+        "matchManagers": ["github-actions", "gradle-wrapper"],
+        "groupName": "gradle and github actions"
+      },
+      {
+        "matchDepTypes": ["plugin"],
+        "groupName": "gradle and github actions"
+      },
+      {
+        "matchFileNames": ["build-logic/*", "buildSrc/*"],
+        "groupName": "gradle and github actions"
       }
-    ],
-    "labels": [
-      "dependencies"
-    ],
-    "semanticCommitType": "build",
-    "commitMessagePrefix": "chore(deps): "
+    ]
   }
