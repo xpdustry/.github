@@ -16,5 +16,4 @@ jobs:
       draft_version: ${{ github.event.inputs.draft_version || '' }}
     permissions:
       contents: write
-      pull-requests: read
     secrets: "inherit"

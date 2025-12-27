@@ -21,15 +21,15 @@
       },
       {
         "matchManagers": ["github-actions", "gradle-wrapper"],
-        "groupName": "gradle and github actions"
+        "groupName": "build systems"
       },
       {
         "matchDepTypes": ["plugin"],
-        "groupName": "gradle and github actions"
+        "groupName": "build systems"
       },
       {
         "matchFileNames": ["build-logic/*", "buildSrc/*"],
-        "groupName": "gradle and github actions"
+        "groupName": "build systems"
       }
     ]
   }

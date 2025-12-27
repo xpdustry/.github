@@ -59,10 +59,10 @@ jobs:
           sparse-checkout: |
             scripts/draft-release-java
 
-      - name: "Setup Python 3.13"
+      - name: "Setup Python"
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.14'
 
       - name: "Generate Draft"
         run: |
