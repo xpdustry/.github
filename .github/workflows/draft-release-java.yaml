@@ -41,8 +41,13 @@ jobs:
         env:
           DRAFT_VERSION: ${{ inputs.draft_version }}
         run: |
+          set -euo pipefail
           if [ -z "$DRAFT_VERSION" ]; then
             DRAFT_VERSION=$(./gradlew -q :properties | sed -n 's/^version: \([^-]*\).*/\1/p')
+            if [ -z "$DRAFT_VERSION" ]; then
+              echo "ERROR: Failed to extract version from Gradle properties"
+              exit 1
+            fi
           fi
           echo "version=$DRAFT_VERSION" >> $GITHUB_OUTPUT
 
