@@ -69,8 +69,8 @@ def generate_changelog(output: Path, repository_url: str):
             for project in sorted(projects.keys()):
                 commits = projects[project]
                 if project:
-                    f.writelines(f"#### {project}\n")
-                f.writelines([f" - [`{c.short_sha}`]({repository_url}/commit/{c.sha}) {c.message}" for c in commits])
+                    f.writelines(f"#### {project}\n\n")
+                f.writelines([f" - [`{c.short_sha}`]({repository_url}/commit/{c.sha}) {c.message}\n" for c in commits])
                 f.writelines("\n")
             f.writelines("\n")
 
