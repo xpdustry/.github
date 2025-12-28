@@ -12,6 +12,11 @@ on:
         description: "The location of the files to upload/publish."
         type: string
         required: true
+      publish_maven:
+        description: "Whether the project should be published to maven."
+        type: boolean
+        default: true
+        required: false
       version_file:
         description: "The file containing the project version."
         type: string
@@ -67,7 +72,7 @@ jobs:
           path: "**/build/test-results/test/TEST-*.xml"
 
       - name: "Publish to Maven"
-        if: ${{ github.event_name == 'release' || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev') }}
+        if: ${{ inputs.publish_maven && (github.event_name == 'release' || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev')) }}
         run: ./gradlew publish
         env:
           ORG_GRADLE_PROJECT_xpdustryUsername: "${{ secrets.XPDUSTRY_MAVEN_USERNAME }}"
