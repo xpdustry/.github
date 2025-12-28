@@ -25,6 +25,11 @@ on:
         description: "The kind of the file containing the project version."
         type: string
         required: true
+      build_command:
+        description: "The build command for building the project."
+        type: string
+        default: "build"
+        required: false
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
@@ -55,7 +60,9 @@ jobs:
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
 
       - name: "Build Gradle Project"
-        run: ./gradlew build
+        env:
+          BUILD_COMMAND: ${{ inputs.gradle_build_command }}
+        run: ./gradlew $BUILD_COMMAND
 
       - name: "Upload Artifacts"
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
