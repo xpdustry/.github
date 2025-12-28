@@ -1,4 +1,4 @@
-name: Draft Release (Java)
+name: "Draft Release (Java)"
 
 on:
   workflow_call:
@@ -16,6 +16,7 @@ on:
 
 jobs:
   action:
+    name: "Action"
     runs-on: ubuntu-latest
     steps:
 

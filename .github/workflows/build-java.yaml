@@ -1,0 +1,136 @@
+name: "Release (Java)"
+
+on:
+  workflow_call:
+    inputs:
+      java_version:
+        description: "The version of the jdk to use."
+        type: number
+        default: 25
+        required: false
+      artifacts_path:
+        description: "The location of the files to upload/publish."
+        type: string
+        required: true
+      version_file:
+        description: "The file containing the project version."
+        type: string
+        required: true
+      version_file_kind:
+        description: "The kind of the file containing the project version."
+        type: string
+        required: true
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
+  cancel-in-progress: true
+
+env:
+  ORG_GRADLE_PROJECT_release: ${{ github.event_name == 'release' }}
+
+jobs:
+  action:
+    name: "Action"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout Repository"
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: "Setup Java ${{ inputs.java_version }}"
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
+        with:
+          java-version: "${{ inputs.java_version }}"
+          distribution: "temurin"
+
+      - name: "Setup Gradle"
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
+
+      - name: "Build Gradle Project"
+        run: ./gradlew build
+
+      - name: "Upload Artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: ${{ inputs.artifacts_path }}
+          if-no-files-found: error
+
+      - name: "Upload Test Results"
+        if: (!cancelled())
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/build/test-results/test/TEST-*.xml"
+
+      - name: "Publish to Maven"
+        if: ${{ github.event_name == 'release' || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev') }}
+        run: ./gradlew publish
+        env:
+          ORG_GRADLE_PROJECT_xpdustryUsername: "${{ secrets.XPDUSTRY_MAVEN_USERNAME }}"
+          ORG_GRADLE_PROJECT_xpdustryPassword: "${{ secrets.XPDUSTRY_MAVEN_PASSWORD }}"
+          ORG_GRADLE_PROJECT_signingKey: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_KEY }}"
+          ORG_GRADLE_PROJECT_signingPassword: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_PASSWORD }}"
+
+      - name: "Publish to Github"
+        if: ${{ github.event_name == 'release' }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ inputs.artifacts_path }}
+          file_glob: true
+          tag: ${{ github.ref }}
+
+      - name: "Checkout CI Scripts"
+        if: ${{ github.event_name == 'release' }}
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          repository: xpdustry/.github
+          path: .github/shared-ci
+          sparse-checkout: |
+            scripts/build-java
+
+      - name: "Setup Python"
+        if: ${{ github.event_name == 'release' }}
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
+        with:
+          python-version: '3.14'
+
+      - name: "Update Version"
+        if: ${{ github.event_name == 'release' }}
+        env:
+          VERSION_FILE: "${{ inputs.version_file }}"
+          VERSION_FILE_KIND: "${{ inputs.version_file_kind }}"
+        run: |
+          python .github/shared-ci/scripts/build-java/increment-version.py \
+            --version-file $VERSION_FILE \
+            --version-file-kind $VERSION_FILE_KIND
+
+      - name: "Update Changelog"
+        if: ${{ github.event_name == 'release' }}
+        uses: stefanzweifel/changelog-updater-action@v1
+        with:
+          latest-version: ${{ github.event.release.tag_name }}
+          release-notes: ${{ github.event.release.body }}
+
+      - name: "Commit Updated Files"
+        if: ${{ github.event_name == 'release' }}
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          branch: ${{ github.event.release.target_commitish }}
+          commit_message: "chore: Post release updates"
+          file_pattern: "CHANGELOG.md ${{ inputs.version_file }}"
+
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Upload Event File"
+        uses: actions/upload-artifact@v4
+        with:
+          name: event-file
+          path: ${{ github.event_path }}
