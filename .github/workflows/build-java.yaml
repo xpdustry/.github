@@ -61,8 +61,8 @@ jobs:
 
       - name: "Build Gradle Project"
         env:
-          BUILD_COMMAND: ${{ inputs.gradle_build_command }}
-        run: ./gradlew $BUILD_COMMAND
+          BUILD_COMMAND: ${{ inputs.build_command }}
+        run: ./gradlew "$BUILD_COMMAND"
 
       - name: "Upload Artifacts"
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -118,8 +118,8 @@ jobs:
           VERSION_FILE_KIND: "${{ inputs.version_file_kind }}"
         run: |
           python .github/shared-ci/scripts/build-java/increment-version.py \
-            --version-file $VERSION_FILE \
-            --version-file-kind $VERSION_FILE_KIND
+            --version-file "$VERSION_FILE" \
+            --version-file-kind "$VERSION_FILE_KIND"
 
       - name: "Update Changelog"
         if: ${{ github.event_name == 'release' }}
