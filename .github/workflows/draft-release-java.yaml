@@ -46,7 +46,7 @@ jobs:
           if [ -z "$DRAFT_VERSION" ]; then
             DRAFT_VERSION=$(./gradlew -q :properties | sed -n 's/^version: \([^-]*\).*/\1/p')
             if [ -z "$DRAFT_VERSION" ]; then
-              echo "ERROR: Failed to extract version from Gradle properties"
+              echo "[ERR]: Failed to extract version from Gradle properties"
               exit 1
             fi
           fi
@@ -75,7 +75,7 @@ jobs:
       - name: "Publish Draft Release"
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
         with:
-          name: "v${{ steps.prepare.outputs.version }}"
+          name: "v${{ steps.prepare.outputs.version }} release"
           draft: true
           tag_name: "v${{ steps.prepare.outputs.version }}"
           body_path: "GENERATED_CHANGELOG.md"
