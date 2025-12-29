@@ -1,8 +1,0 @@
-{
-  "name": "Xpdustry - Draft Release (Java)",
-  "description": "Automatically create a draft GitHub release with changelogs for Java projects.",
-  "categories": [
-    "Java",
-    "Release Management"
-  ]
-}

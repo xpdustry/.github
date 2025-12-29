@@ -1,4 +1,4 @@
-name: "Release (Java)"
+name: "Build (Java)"
 
 on:
   workflow_call:
@@ -8,40 +8,46 @@ on:
         type: number
         default: 25
         required: false
-      artifacts_path:
+      gradle_build_tasks:
+        description: "The build tasks for building the project."
+        type: string
+        default: "build"
+        required: false
+      gradle_artifacts_path:
         description: "The location of the files to upload/publish."
         type: string
         required: true
-      publish_maven:
-        description: "Whether the project should be published to maven."
+      gradle_publish:
+        description: "Whether the project should be published."
         type: boolean
         default: true
         required: false
-      version_file:
-        description: "The file containing the project version."
+      release:
+        description: "Whether we are in release mode."
+        type: boolean
+        default: false
+        required: false
+      release_name_template:
+        description: "The template to use for releases."
         type: string
-        required: true
-      version_file_kind:
-        description: "The kind of the file containing the project version."
-        type: string
-        required: true
-      build_command:
-        description: "The build command for building the project."
-        type: string
-        default: "build"
+        default: "{0} release"
         required: false
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
   cancel-in-progress: true
 
+permissions: {}
+
 env:
-  ORG_GRADLE_PROJECT_release: ${{ github.event_name == 'release' }}
+  ORG_GRADLE_PROJECT_release: ${{ inputs.release }}
 
 jobs:
   action:
     name: "Action"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
 
       - name: "Checkout Repository"
@@ -49,6 +55,21 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
+
+      - name: "Checkout CI Scripts"
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          repository: xpdustry/.github
+          path: .github/shared-ci
+          sparse-checkout: |
+            scripts
+
+      - name: "Validate Version and Changelog"
+        id: validate
+        run:
+          .github/shared-ci/scripts/version-validate.sh VERSION.txt
+          echo "version=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
+          .github/shared-ci/scripts/changelog-extract.sh CURRENT_CHANGELOG_BODY.md
 
       - name: "Setup Java ${{ inputs.java_version }}"
         uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
@@ -60,26 +81,27 @@ jobs:
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
 
       - name: "Build Gradle Project"
-        env:
-          BUILD_COMMAND: ${{ inputs.build_command }}
-        run: ./gradlew $BUILD_COMMAND
+        run: ./gradlew ${{ inputs.gradle_build_tasks }}
 
       - name: "Upload Artifacts"
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: artifacts
-          path: ${{ inputs.artifacts_path }}
+          path: ${{ inputs.gradle_artifacts_path }}
           if-no-files-found: error
 
       - name: "Upload Test Results"
-        if: (!cancelled())
+        if: ${{ always() }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: test-results
-          path: "**/build/test-results/test/TEST-*.xml"
+          path: |
+            **/build/test-results/test/TEST-*.xml
+            build/reports/
+            */build/reports/
 
       - name: "Publish to Maven"
-        if: ${{ inputs.publish_maven && (github.event_name == 'release' || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev')) }}
+        if: ${{ inputs.gradle_publish && (inputs.release || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev')) }}
         run: ./gradlew publish
         env:
           ORG_GRADLE_PROJECT_xpdustryUsername: "${{ secrets.XPDUSTRY_MAVEN_USERNAME }}"
@@ -88,57 +110,34 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_PASSWORD }}"
 
       - name: "Publish to Github"
-        if: ${{ github.event_name == 'release' }}
-        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2
+        if: ${{ inputs.release }}
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ inputs.artifacts_path }}
-          file_glob: true
-          tag: ${{ github.ref }}
+          tag_name: v${{ steps.validate.outputs.version }}
+          name: ${{ format(inputs.release_name_template, 'v' + steps.validate.outputs.version) }}
+          body_path: CURRENT_CHANGELOG_BODY.md
+          files: ${{ inputs.gradle_artifacts_path }}
+          preserve_order: true
+          make_latest: true
+          target_commitish: ${{ github.ref }}
 
-      - name: "Checkout CI Scripts"
-        if: ${{ github.event_name == 'release' }}
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-        with:
-          repository: xpdustry/.github
-          path: .github/shared-ci
-          sparse-checkout: |
-            scripts/build-java
-
-      - name: "Setup Python"
-        if: ${{ github.event_name == 'release' }}
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
-        with:
-          python-version: '3.14'
-
-      - name: "Update Version"
-        if: ${{ github.event_name == 'release' }}
-        env:
-          VERSION_FILE: "${{ inputs.version_file }}"
-          VERSION_FILE_KIND: "${{ inputs.version_file_kind }}"
+      - name: "Bump Version and Update Changelog"
+        if: ${{ inputs.release }}
         run: |
-          python .github/shared-ci/scripts/build-java/increment-version.py \
-            --version-file "$VERSION_FILE" \
-            --version-file-kind "$VERSION_FILE_KIND"
-
-      - name: "Update Changelog"
-        if: ${{ github.event_name == 'release' }}
-        uses: stefanzweifel/changelog-updater-action@a938690fad7edf25368f37e43a1ed1b34303eb36 # v1
-        with:
-          latest-version: ${{ github.event.release.tag_name }}
-          release-notes: ${{ github.event.release.body }}
-
-      - name: "Commit Updated Files"
-        if: ${{ github.event_name == 'release' }}
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7
-        with:
-          branch: ${{ github.event.release.target_commitish }}
-          commit_message: "chore: Post release updates"
-          file_pattern: "CHANGELOG.md ${{ inputs.version_file }}"
+          git config --local user.email "ci@xpdustry.com"
+          git config --local user.name "Xpdustry CI"
+          .github/shared-ci/scripts/version-increment.sh VERSION.txt
+          git add VERSION.txt
+          .github/shared-ci/scripts/changelog-update.sh CHANGELOG.md CHANGELOG.md "$(cat VERSION.txt)"
+          git add CHANGELOG.md
+          git commit -m "chore(release): Bump version and update changelog and "
+          git push
 
   event_file:
     name: "Event File"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
 
       - name: "Upload Event File"
