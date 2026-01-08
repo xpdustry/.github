@@ -18,6 +18,11 @@ on:
         type: boolean
         default: true
         required: false
+      gradle_publish_tasks:
+        description: "The publish tasks for publishing the project."
+        type: string
+        default: "publish"
+        required: false
       artifacts_path:
         description: "The location of the files to upload/publish."
         type: string
@@ -100,15 +105,6 @@ jobs:
             build/reports/
             */build/reports/
 
-      - name: "Publish to Maven"
-        if: ${{ inputs.gradle_publish && (inputs.release || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev')) }}
-        run: ./gradlew publish
-        env:
-          ORG_GRADLE_PROJECT_xpdustryUsername: "${{ secrets.XPDUSTRY_MAVEN_USERNAME }}"
-          ORG_GRADLE_PROJECT_xpdustryPassword: "${{ secrets.XPDUSTRY_MAVEN_PASSWORD }}"
-          ORG_GRADLE_PROJECT_signingKey: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_KEY }}"
-          ORG_GRADLE_PROJECT_signingPassword: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_PASSWORD }}"
-
       - name: "Publish to Github"
         if: ${{ inputs.release }}
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
@@ -120,6 +116,17 @@ jobs:
           preserve_order: true
           make_latest: true
           target_commitish: ${{ github.ref }}
+
+      - name: "Publish to Maven"
+        if: ${{ inputs.gradle_publish && (inputs.release || startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/dev')) }}
+        run: ./gradlew ${{ inputs.gradle_publish_tasks }}
+        env:
+          ORG_GRADLE_PROJECT_xpdustryUsername: "${{ secrets.XPDUSTRY_MAVEN_USERNAME }}"
+          ORG_GRADLE_PROJECT_xpdustryPassword: "${{ secrets.XPDUSTRY_MAVEN_PASSWORD }}"
+          ORG_GRADLE_PROJECT_signingKey: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_KEY }}"
+          ORG_GRADLE_PROJECT_signingPassword: "${{ secrets.XPDUSTRY_MAVEN_SIGNING_PASSWORD }}"
+          ORG_GRADLE_PROJECT_pluginPortalApiKey: "${{ secrets.XPDUSTRY_GRADLE_PORTAL_KEY }}"
+          ORG_GRADLE_PROJECT_pluginPortalApiSecret: "${{ secrets.XPDUSTRY_GRADLE_PORTAL_SECRET }}"
 
       - name: "Bump Version and Update Changelog"
         if: ${{ inputs.release }}
