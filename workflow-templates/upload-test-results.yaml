@@ -8,5 +8,6 @@ on:
 
 jobs:
   upload:
+    name: "Upload"
     uses: xpdustry/.github/.github/workflows/upload-test-results.yaml@master
     secrets: "inherit"
