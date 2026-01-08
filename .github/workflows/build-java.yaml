@@ -126,10 +126,10 @@ jobs:
         run: |
           git config --local user.email "ci@xpdustry.com"
           git config --local user.name "Xpdustry CI"
-          .github/shared-ci/scripts/version-increment.sh VERSION.txt
-          git add VERSION.txt
           .github/shared-ci/scripts/changelog-update.sh CHANGELOG.md CHANGELOG.md "$(cat VERSION.txt)"
           git add CHANGELOG.md
+          .github/shared-ci/scripts/version-increment.sh VERSION.txt
+          git add VERSION.txt
           git commit -m "chore(release): Bump version and update changelog and "
           git push
 
