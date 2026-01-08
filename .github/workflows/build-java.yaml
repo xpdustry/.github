@@ -68,7 +68,7 @@ jobs:
         id: validate
         run:
           .github/shared-ci/scripts/version-validate.sh VERSION.txt
-          echo "version=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
+          echo "version=v$(cat VERSION.txt)" >> $GITHUB_OUTPUT
           .github/shared-ci/scripts/changelog-extract.sh CURRENT_CHANGELOG_BODY.md
 
       - name: "Setup Java ${{ inputs.java_version }}"
@@ -113,8 +113,8 @@ jobs:
         if: ${{ inputs.release }}
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
         with:
-          tag_name: v${{ steps.validate.outputs.version }}
-          name: ${{ format(inputs.release_name_template, 'v' + steps.validate.outputs.version) }}
+          tag_name: ${{ steps.validate.outputs.version }}
+          name: ${{ format(inputs.release_name_template, steps.validate.outputs.version) }}
           body_path: CURRENT_CHANGELOG_BODY.md
           files: ${{ inputs.artifacts_path }}
           preserve_order: true
