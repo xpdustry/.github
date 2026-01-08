@@ -66,7 +66,7 @@ jobs:
 
       - name: "Validate Version and Changelog"
         id: validate
-        run:
+        run: |
           .github/shared-ci/scripts/version-validate.sh VERSION.txt
           echo "version=v$(cat VERSION.txt)" >> $GITHUB_OUTPUT
           .github/shared-ci/scripts/changelog-extract.sh CURRENT_CHANGELOG_BODY.md
