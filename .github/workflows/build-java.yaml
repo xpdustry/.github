@@ -129,7 +129,7 @@ jobs:
 
       - name: "Commit Updated Files"
         if: ${{ inputs.release }}
-        uses: planetscale/ghcommit-action@v0.2.20
+        uses: planetscale/ghcommit-action@25309d8005ac7c3bcd61d3fe19b69e0fe47dbdde # v0.2.20
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
