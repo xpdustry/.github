@@ -7,7 +7,7 @@ on:
   pull_request:
   workflow_dispatch:
     release:
-      description: "Publish the project and increment version."
+      description: "Publish"
       type: boolean
       required: false
       default: false
@@ -18,6 +18,6 @@ jobs:
     uses: xpdustry/.github/.github/workflows/build-java.yaml@master
     with:
       java_version: 25
-      release: ${{ github.event.inputs.release }}
+      release: ${{ github.event_name == 'workflow_dispatch' && inputs.release || false }}
       artifacts_path: build/release/*.jar
     secrets: "inherit"
