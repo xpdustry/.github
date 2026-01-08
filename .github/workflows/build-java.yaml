@@ -69,7 +69,7 @@ jobs:
         run: |
           .github/shared-ci/scripts/version-validate.sh VERSION.txt
           echo "version=v$(cat VERSION.txt)" >> $GITHUB_OUTPUT
-          .github/shared-ci/scripts/changelog-extract.sh CURRENT_CHANGELOG_BODY.md
+          .github/shared-ci/scripts/changelog-extract.sh CHANGELOG.md CURRENT_CHANGELOG_BODY.md
 
       - name: "Setup Java ${{ inputs.java_version }}"
         uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
