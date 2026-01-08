@@ -28,6 +28,9 @@ result=$(awk '
 while [[ "$result" =~ ^[[:space:]] ]]; do
   result="${result#[[:space:]]}"
 done
+if [[ "$result" = "" ]]; then
+  result="No notable changes."
+fi
 
 echo "$result" > "$output_file"
 
