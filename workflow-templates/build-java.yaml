@@ -19,6 +19,4 @@ jobs:
       java_version: 25
       release: ${{ github.event.inputs.release }}
       artifacts_path: build/release/*.jar
-      version_file: plugin.json
-      version_file_kind: mindustry-mod
     secrets: "inherit"

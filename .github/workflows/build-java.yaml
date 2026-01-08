@@ -13,15 +13,15 @@ on:
         type: string
         default: "build"
         required: false
-      gradle_artifacts_path:
-        description: "The location of the files to upload/publish."
-        type: string
-        required: true
       gradle_publish:
         description: "Whether the project should be published."
         type: boolean
         default: true
         required: false
+      artifacts_path:
+        description: "The location of the files to upload/publish."
+        type: string
+        required: true
       release:
         description: "Whether we are in release mode."
         type: boolean
@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: artifacts
-          path: ${{ inputs.gradle_artifacts_path }}
+          path: ${{ inputs.artifacts_path }}
           if-no-files-found: error
 
       - name: "Upload Test Results"
@@ -116,7 +116,7 @@ jobs:
           tag_name: v${{ steps.validate.outputs.version }}
           name: ${{ format(inputs.release_name_template, 'v' + steps.validate.outputs.version) }}
           body_path: CURRENT_CHANGELOG_BODY.md
-          files: ${{ inputs.gradle_artifacts_path }}
+          files: ${{ inputs.artifacts_path }}
           preserve_order: true
           make_latest: true
           target_commitish: ${{ github.ref }}
