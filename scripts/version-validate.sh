@@ -18,12 +18,12 @@ version=$(tr -d "[:space:]" < "$version_file")
 if [[ ! "$version" =~ $semver_regex ]]; then
   echo "[ERR]: File version invalid: '$version'" >&2
   exit 1
-else
-  echo "[INF]: File version valid: $version"
 fi
 
-exists=$(git tag -l "$version")
+exists=$(git tag -l "v$version")
 if [ "$exists" != "" ]; then
   echo "[ERR]: The version file points to an existing tag"
   exit 1
 fi
+
+echo "[INF]: File version valid: $version"
