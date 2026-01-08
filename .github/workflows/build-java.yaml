@@ -124,14 +124,19 @@ jobs:
       - name: "Bump Version and Update Changelog"
         if: ${{ inputs.release }}
         run: |
-          git config --local user.email "ci@xpdustry.com"
-          git config --local user.name "Xpdustry CI"
           .github/shared-ci/scripts/changelog-update.sh CHANGELOG.md CHANGELOG.md "$(cat VERSION.txt)"
-          git add CHANGELOG.md
           .github/shared-ci/scripts/version-increment.sh VERSION.txt
-          git add VERSION.txt
-          git commit -m "chore(release): Bump version and update changelog and "
-          git push
+
+      - name: "Commit Updated Files"
+        if: ${{ inputs.release }}
+        uses: planetscale/ghcommit-action@v0.2.20
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: "chore(release): Update changelog and bump version"
+          repo: ${{ github.repository }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          file_pattern: "CHANGELOG.md VERSION.txt"
 
   event_file:
     name: "Event File"
