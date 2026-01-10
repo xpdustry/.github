@@ -108,7 +108,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: "Validate Changelog"
-        run: .xpdustry-ci/scripts/extract-changelog-body.sh "CHANGELOG.md" "RELEASE_BODY.md"
+        run: .xpdustry-ci/scripts/changelog-extract-body.sh "CHANGELOG.md" "RELEASE_BODY.md"
 
       - name: "Build Gradle"
         run: ./gradlew ${{ inputs.gradle_build_tasks }}
