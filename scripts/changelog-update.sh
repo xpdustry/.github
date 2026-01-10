@@ -1,26 +1,28 @@
 #!/bin/bash
 set -euo pipefail
 
-if [ $# -ne 3 ]; then
-  echo "[ERR]: Usage: $0 <changelog_file> <output_file> <new_version>" >&2
+if [[ $# -ne 2 ]]; then
+  echo "::error::Usage: $0 <changelog_file> <new_version>" >&2
   exit 1
 fi
 
 changelog_file="$1"
-output_file="$2"
-new_version="$3"
+new_version="$2"
 
-# Check if changelog file exists
-if [ ! -f "$changelog_file" ]; then
-  echo "[ERR]: Changelog file '$changelog_file' not found" >&2
+if [[ ! -f "$changelog_file" ]]; then
+  echo "::error::Changelog file '$changelog_file' not found" >&2
   exit 1
 fi
 
-new_version_header=$'\n'"## $new_version - $(date -u +%Y-%m-%d)"
-tmp=$(mktemp)
-awk -v header="$new_version_header" '
-  /^## SNAPSHOT/ { print; print header; next }
-  { print }
-' "$changelog_file" > "$tmp" && mv "$tmp" "$output_file"
+if ! grep -q "^## SNAPSHOT" "$changelog_file"; then
+  echo "::error::'## SNAPSHOT' section not found in '$changelog_file'" >&2
+  exit 1
+fi
 
-echo "[INF]: Changelog updated with version $new_version"
+release_date=$(date -u +%Y-%m-%d)
+awk -v header="## v$new_version - $release_date" '
+  /^## SNAPSHOT/ { print; print ""; print header; next }
+  { print }
+' "$changelog_file" > "$changelog_file.tmp" && mv "$changelog_file.tmp" "$changelog_file"
+
+echo "::notice::Changelog updated with version $new_version ($release_date)"

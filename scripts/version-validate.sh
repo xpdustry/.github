@@ -1,29 +1,30 @@
 #!/bin/bash
 set -euo pipefail
 
-if [ $# -ne 1 ]; then
-  echo "[ERR]: Usage: $0 <version_file>" >&2
+SEMVER_REGEX="^([0-9]+)\.([0-9]+)\.([0-9]+)(-([a-zA-Z][0-9a-zA-Z]*)\.([0-9]+))?(-SNAPSHOT)?$"
+
+if [[ $# -ne 2 ]]; then
+  echo "::error::Usage: $0 <version> <release_mode>" >&2
   exit 1
 fi
 
-semver_regex="^([0-9]+)\.([0-9]+)\.([0-9]+)(-([a-zA-Z][0-9a-zA-Z]*)\.([0-9]+))?$"
-version_file="$1"
+version="$1"
+release_mode="$2"
 
-if [[ ! -f "$version_file" ]]; then
-  echo "[ERR]: '$version_file' file not found" >&2
+if [[ ! "$version" =~ $SEMVER_REGEX ]]; then
+  echo "::error::Version is invalid, expected matching '$SEMVER_REGEX', got '$version'" >&2
   exit 1
 fi
 
-version=$(tr -d "[:space:]" < "$version_file")
-if [[ ! "$version" =~ $semver_regex ]]; then
-  echo "[ERR]: File version invalid: '$version'" >&2
+git_version="v${version%-SNAPSHOT}"
+if [[ "$(git tag -l "$git_version")" != "" ]]; then
+  echo "::error::'$git_version' already exists as a git tag" >&2
   exit 1
 fi
 
-exists=$(git tag -l "v$version")
-if [ "$exists" != "" ]; then
-  echo "[ERR]: The version file points to an existing tag"
+if [[ "$version" == *"-SNAPSHOT" && "$release_mode" == "true" ]]; then
+  echo "::error::-SNAPSHOT suffix is present in release mode" >&2
   exit 1
 fi
 
-echo "[INF]: File version valid: $version"
+echo "::notice::Version '$version' validated successfully"
