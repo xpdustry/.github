@@ -163,7 +163,7 @@ jobs:
           if [[ -n "$gradle_version_bump_task" ]]; then
             ./gradlew "$gradle_version_bump_task"
           else
-            .xpdustry-ci/scripts/bump-version.sh "${{ inputs.version_file }}" "${{ steps.version.outputs.version }}"
+            .xpdustry-ci/scripts/version-bump.sh "${{ inputs.version_file }}" "${{ steps.version.outputs.version }}"
           fi
 
       - name: "Commit Release Changes"
