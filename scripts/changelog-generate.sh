@@ -11,7 +11,6 @@ output_file="$2"
 latest_tag=$(git tag --sort=-creatordate | head -n 1)
 query="${latest_tag:+$latest_tag..}HEAD"
 work_dir=$(mktemp -d)
-echo "$work_dir"
 trap 'rm -rf "$work_dir"' EXIT
 
 git log "$query" --format="%H|%h|%s" | while IFS='|' read -r sha short_sha summary_raw; do

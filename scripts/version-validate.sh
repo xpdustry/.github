@@ -16,13 +16,15 @@ if [[ ! "$version" =~ $SEMVER_REGEX ]]; then
   exit 1
 fi
 
-git_version="v${version%-SNAPSHOT}"
-if [[ "$(git tag -l "$git_version")" != "" ]]; then
-  echo "::error::'$git_version' already exists as a git tag" >&2
-  exit 1
-fi
-
-if [[ "$version" == *"-SNAPSHOT" && "$release_mode" == "true" ]]; then
-  echo "::error::-SNAPSHOT suffix is present in release mode" >&2
-  exit 1
+if [[ "$release_mode" == "true" ]]; then
+  if [[ "$version" == *"-SNAPSHOT" ]]; then
+    echo "::error::-SNAPSHOT suffix is present in release mode" >&2
+    exit 1
+  fi
+else
+  git_version="v${version%-SNAPSHOT}"
+  if [[ "$(git tag -l "$git_version")" != "" ]]; then
+    echo "::error::'$git_version' already exists as a git tag" >&2
+    exit 1
+  fi
 fi
