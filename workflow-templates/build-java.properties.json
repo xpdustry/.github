@@ -1,6 +1,7 @@
 {
     "name": "Xpdustry - Build (Java)",
     "description": "Standard workflow for building, testing, and publishing java projects.",
+    "iconName": "rocket",
     "categories": [
         "Java"
     ],

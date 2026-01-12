@@ -26,5 +26,3 @@ if [[ "$version" == *"-SNAPSHOT" && "$release_mode" == "true" ]]; then
   echo "::error::-SNAPSHOT suffix is present in release mode" >&2
   exit 1
 fi
-
-echo "::notice::Version '$version' validated successfully"

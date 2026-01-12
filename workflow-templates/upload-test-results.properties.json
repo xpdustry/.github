@@ -1,6 +1,7 @@
 {
     "name": "Xpdustry - Upload Test Results",
     "description": "Upload test results from a project.",
+    "iconName": "rocket",
     "categories": [
         "Testing"
     ]

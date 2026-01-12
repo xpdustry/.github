@@ -26,14 +26,13 @@ minor="${BASH_REMATCH[2]}"
 patch="${BASH_REMATCH[3]}"
 extra="${BASH_REMATCH[5]}"
 build="${BASH_REMATCH[6]}"
-snapshot="${BASH_REMATCH[7]}"
 
 if [[ -n "$extra" ]]; then
-  next_version="$major.$minor.$patch-$extra.$((build + 1))$snapshot"
+  next_version="$major.$minor.$patch-$extra.$((build + 1))"
 else
-  next_version="$major.$minor.$((patch + 1))$snapshot"
+  next_version="$major.$minor.$((patch + 1))"
 fi
 
 sed -i "s/$prev_version/$next_version/g" "$version_file"
 
-echo "::notice::Version incremented: $prev_version -> $next_version"
+echo "::notice::Version bumped: $prev_version -> $next_version"

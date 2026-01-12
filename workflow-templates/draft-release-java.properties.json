@@ -1,0 +1,9 @@
+{
+  "name": "Draft Release",
+  "description": "Validates project version, generates a changelog using xpdustry scripts, and creates a draft GitHub release.",
+  "iconName": "rocket",
+  "categories": [
+    "Java",
+    "Automation"
+  ]
+}
