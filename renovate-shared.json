@@ -1,35 +1,35 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-      "config:recommended"
-    ],
-    "labels": [
-      "dependencies"
-    ],
-    "semanticCommitType": "build",
-    "commitMessagePrefix": "chore(deps): ",
-    "packageRules": [
-      {
-        "matchDatasources": ["maven"],
-        "registryUrls": ["https://maven.xpdustry.com/releases", "https://maven.xpdustry.com/snapshots"],
-        "matchPackagePrefixes": ["com.xpdustry", "fr.xpdustry"]
-      },
-      {
-        "matchDatasources": ["maven"],
-        "registryUrls": ["https://maven.xpdustry.com/mindustry"],
-        "matchPackagePrefixes": ["com.github.Anuken"]
-      },
-      {
-        "matchManagers": ["github-actions", "gradle-wrapper"],
-        "groupName": "build systems"
-      },
-      {
-        "matchDepTypes": ["plugin"],
-        "groupName": "build systems"
-      },
-      {
-        "matchFileNames": ["build-logic/*", "buildSrc/*"],
-        "groupName": "build systems"
-      }
-    ]
-  }
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "semanticCommitType": "build",
+  "commitMessagePrefix": "chore(deps): ",
+  "packageRules": [
+    {
+      "matchDatasources": ["maven"],
+      "registryUrls": ["https://maven.xpdustry.com/releases", "https://maven.xpdustry.com/snapshots"],
+      "matchPackagePrefixes": ["com.xpdustry", "fr.xpdustry"]
+    },
+    {
+      "matchDatasources": ["maven"],
+      "registryUrls": ["https://maven.xpdustry.com/mindustry"],
+      "matchPackagePrefixes": ["com.github.Anuken"]
+    },
+    {
+      "matchManagers": ["github-actions", "gradle-wrapper"],
+      "groupName": "build systems"
+    },
+    {
+      "matchDepTypes": ["plugin"],
+      "groupName": "build systems"
+    },
+    {
+      "matchFileNames": ["build-logic/*", "buildSrc/*"],
+      "groupName": "build systems"
+    }
+  ]
+}

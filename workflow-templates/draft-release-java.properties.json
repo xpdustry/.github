@@ -1,9 +1,14 @@
 {
-  "name": "Draft Release",
-  "description": "Validates project version, generates a changelog using xpdustry scripts, and creates a draft GitHub release.",
+  "name": "Xpdustry - Draft Release (Java)",
+  "description": "Create a draft release with a generated changelog based on commits.",
   "iconName": "rocket",
   "categories": [
     "Java",
+    "Kotlin",
     "Automation"
+  ],
+  "filePatterns": [
+    "settings.gradle(?:.kts)?",
+    "build.gradle(?:.kts)?"
   ]
 }
