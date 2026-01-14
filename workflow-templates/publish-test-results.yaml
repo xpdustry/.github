@@ -1,4 +1,4 @@
-name: "Upload Test Results"
+name: "Publish Test Results"
 
 on:
   workflow_run:
