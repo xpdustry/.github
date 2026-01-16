@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-SEMVER_REGEX="^([0-9]+)\.([0-9]+)\.([0-9]+)(-([a-zA-Z][0-9a-zA-Z]*)\.([0-9]+))?(-SNAPSHOT)?$"
+SEMVER_REGEX="^([0-9]+)\.([0-9]+)\.([0-9]+)(-([a-zA-Z][0-9a-zA-Z]*)\.([0-9]+))?(-SNAPSHOT)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$"
 
 if [[ $# -ne 2 ]]; then
   echo "::error::Usage: $0 <version> <release_mode>" >&2
