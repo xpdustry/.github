@@ -12,13 +12,13 @@ jobs:
     steps:
 
       - name: "Checkout Repository"
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-tags: true
           fetch-depth: 0
 
       - name: "Checkout CI Scripts"
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           repository: xpdustry/.github
           path: .xpdustry-ci
@@ -31,7 +31,7 @@ jobs:
           distribution: "temurin"
 
       - name: "Setup Gradle"
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
 
       - name: "Get And Validate Version"
         id: version
@@ -48,7 +48,7 @@ jobs:
             ".GENERATED_CHANGELOG.md"
 
       - name: "Create Draft Release"
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
+        uses: softprops/action-gh-release@71d29a04ae7c63895f38299d7a5e05d238f7f445 # v2
         with:
           tag_name: "v${{ steps.version.outputs.version }}"
           name: "v${{ steps.version.outputs.version }} release"
