@@ -20,6 +20,11 @@
       "matchPackagePrefixes": ["com.github.Anuken"]
     },
     {
+      "matchDatasources": ["maven"],
+      "registryUrls": ["https://maven.google.com/"],
+      "matchPackagePrefixes": ["com.android.tools"]
+    },
+    {
       "matchManagers": ["github-actions", "gradle-wrapper"],
       "groupName": "build systems"
     },
