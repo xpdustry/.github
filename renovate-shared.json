@@ -35,6 +35,10 @@
     {
       "matchFileNames": ["build-logic/*", "buildSrc/*"],
       "groupName": "build systems"
+    },
+    {
+      "matchPackagePrefixes": ["org.mariadb.jdbc:mariadb-java-client", "com.mysql:mysql-connector-j", "org.postgresql:postgresql", "org.xerial:sqlite-jdbc", "com.h2database:h2"],
+      "groupName": "database drivers"
     }
   ]
 }
