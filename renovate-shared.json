@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
   ],
   "labels": [
     "dependencies"
@@ -40,5 +41,8 @@
       "matchPackagePrefixes": ["org.mariadb.jdbc:mariadb-java-client", "com.mysql:mysql-connector-j", "org.postgresql:postgresql", "org.xerial:sqlite-jdbc", "com.h2database:h2"],
       "groupName": "database drivers"
     }
-  ]
+  ],
+  "pinDigest": {
+    "schedule": ["at any time"]
+  }
 }
