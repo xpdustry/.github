@@ -4,9 +4,7 @@
     "config:recommended",
     "helpers:pinGitHubActionDigests"
   ],
-  "labels": [
-    "dependencies"
-  ],
+  "labels": ["dependencies"],
   "semanticCommitType": "build",
   "commitMessagePrefix": "chore(deps): ",
   "packageRules": [
@@ -26,20 +24,30 @@
       "matchPackagePrefixes": ["com.android.tools"]
     },
     {
-      "matchManagers": ["github-actions", "gradle-wrapper"],
-      "groupName": "build systems"
+      "groupName": "build systems",
+      "matchManagers": ["github-actions", "gradle-wrapper"]
     },
     {
-      "matchDepTypes": ["plugin"],
-      "groupName": "build systems"
+      "groupName": "build systems",
+      "matchDepTypes": ["plugin"]
     },
     {
-      "matchFileNames": ["build-logic/*", "buildSrc/*"],
-      "groupName": "build systems"
+      "groupName": "build systems",
+      "matchFileNames": ["build-logic/*", "buildSrc/*"]
     },
     {
-      "matchPackagePrefixes": ["org.mariadb.jdbc:mariadb-java-client", "com.mysql:mysql-connector-j", "org.postgresql:postgresql", "org.xerial:sqlite-jdbc", "com.h2database:h2"],
-      "groupName": "database drivers"
+      "groupName": "database drivers",
+      "matchPackagePrefixes": [
+        "org.xerial:sqlite-jdbc",
+        "com.h2database:h2",
+        "org.postgresql:postgresql",
+        "org.mariadb.jdbc:mariadb-java-client",
+        "com.mysql:mysql-connector-j"
+      ]
+    },
+    {
+      "groupName": "nohorny monorepo",
+      "matchPackagePrefixes": ["com.xpdustry:nohorny"]
     }
   ],
   "pinDigest": {
