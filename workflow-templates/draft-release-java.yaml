@@ -31,7 +31,7 @@ jobs:
           distribution: "temurin"
 
       - name: "Setup Gradle"
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6
 
       - name: "Get And Validate Version"
         id: version
@@ -48,7 +48,7 @@ jobs:
             ".GENERATED_CHANGELOG.md"
 
       - name: "Create Draft Release"
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3
         with:
           tag_name: "v${{ steps.version.outputs.version }}"
           name: "v${{ steps.version.outputs.version }} release"
