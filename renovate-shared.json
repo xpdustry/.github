@@ -7,16 +7,24 @@
   "labels": ["dependencies"],
   "semanticCommitType": "build",
   "commitMessagePrefix": "chore(deps): ",
+  "schedule": ["* * 1 * *"],
   "packageRules": [
     {
       "matchDatasources": ["maven"],
-      "registryUrls": ["https://maven.xpdustry.com/releases", "https://maven.xpdustry.com/snapshots"],
-      "matchPackagePrefixes": ["com.xpdustry", "fr.xpdustry"]
+      "registryUrls": ["https://maven.xpdustry.com/releases"],
+      "matchPackagePrefixes": ["com.xpdustry", "fr.xpdustry"],
+      "schedule": ["* * * * *"]
     },
     {
       "matchDatasources": ["maven"],
       "registryUrls": ["https://maven.xpdustry.com/mindustry"],
-      "matchPackagePrefixes": ["com.github.Anuken"]
+      "matchPackagePrefixes": ["com.github.Anuken"],
+      "schedule": ["* * * * *"]
+    },
+    {
+      "groupName": "nohorny monorepo",
+      "matchPackagePrefixes": ["com.xpdustry:nohorny"],
+      "schedule": ["* * * * *"]
     },
     {
       "matchDatasources": ["maven"],
@@ -44,13 +52,9 @@
         "org.mariadb.jdbc:mariadb-java-client",
         "com.mysql:mysql-connector-j"
       ]
-    },
-    {
-      "groupName": "nohorny monorepo",
-      "matchPackagePrefixes": ["com.xpdustry:nohorny"]
     }
   ],
   "pinDigest": {
-    "schedule": ["at any time"]
+    "schedule": ["* * * * *"]
   }
 }
