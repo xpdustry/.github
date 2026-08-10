@@ -47,7 +47,7 @@
       <feGaussianBlur in="SourceAlpha"
                       stdDeviation="0.01" result="soft-edge"/>
       <feComponentTransfer in="soft-edge" result="expanded-alpha">
-        <feFuncA type="linear" slope="100" intercept="-2"/>
+        <feFuncA type="discrete" tableValues="0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"/>
       </feComponentTransfer>
       <feFlood flood-color="#30363b" result="colour"/>
       <feComposite in="colour" in2="expanded-alpha" operator="in"/>

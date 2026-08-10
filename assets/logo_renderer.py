@@ -277,6 +277,10 @@ def outline_filter(options: RenderOptions) -> str:
     # A blurred alpha edge threshold gives a genuinely round expansion; plain
     # feMorphology uses a rectangular kernel and leaves boxy outside corners.
     padding = options.outline_width
+    # A discrete table splits alpha into one bucket per entry. With 40 entries,
+    # only alpha below 1/40 (0.025) stays transparent; the other 39 buckets are
+    # fully opaque. A short "0 1" table would cut at 0.5 and lose the outline.
+    hard_threshold = "0 " + " ".join(["1"] * 39)
     return f'''    <filter id="outline-filter" x="{number(-padding)}" y="{number(-padding)}"
             width="{number(1 + 2 * padding)}" height="{number(1 + 2 * padding)}"
             filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse"
@@ -284,7 +288,7 @@ def outline_filter(options: RenderOptions) -> str:
       <feGaussianBlur in="SourceAlpha"
                       stdDeviation="{number(options.outline_width / 2)}" result="soft-edge"/>
       <feComponentTransfer in="soft-edge" result="expanded-alpha">
-        <feFuncA type="linear" slope="100" intercept="-2"/>
+        <feFuncA type="discrete" tableValues="{hard_threshold}"/>
       </feComponentTransfer>
       <feFlood flood-color="{xml_colour(options.outline_colour)}" result="colour"/>
       <feComposite in="colour" in2="expanded-alpha" operator="in"/>
