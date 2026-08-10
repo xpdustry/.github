@@ -12,81 +12,21 @@ Current official parameters are:
 - for the fully colored one
 > ./logo_renderer.py \
   --svg logo.svg \
-  --png logo.png \
-  --size 2048 \
-  --cog-radius 0.30 \
-  --hole-radius 0.24 \
-  --axis-tooth-height 0.35 \
-  --axis-tooth-width 0.12 \
-  --axis-tooth-taper 0.03 \
-  --axis-tip-radius 0.02 \
-  --diagonal-tooth-height 0.32 \
-  --diagonal-tooth-width 0.30 \
-  --diagonal-tip-radius 0.05 \
-  --x-height 0.42 \
-  --x-width 0.12 \
-  --x-tip-radius 0.03 \
-  --x-gap 0.04 \
-  --depth 0.03 \
-  --outline-width 0.02 \
-  --axis-crop \
-  --diagonal-crop \
-  --x-crop \
-  --color '#00d1d1' \
-  --x-color '#ffffff' \
-  --cog-depth-color '#007979' \
-  --x-depth-color '#808080' \
-  --outline-color '#30363b'
+  --png logo.png
 
 - for the flat colored one
 > ./logo_renderer.py \
   --svg logo-flat.svg \
   --png logo-flat.png \
-  --size 2048 \
-  --cog-radius 0.30 \
-  --hole-radius 0.24 \
-  --axis-tooth-height 0.35 \
-  --axis-tooth-width 0.12 \
-  --axis-tooth-taper 0.03 \
-  --axis-tip-radius 0.02 \
-  --diagonal-tooth-height 0.32 \
-  --diagonal-tooth-width 0.30 \
-  --diagonal-tip-radius 0.05 \
-  --x-height 0.42 \
-  --x-width 0.12 \
-  --x-tip-radius 0.03 \
-  --x-gap 0.04 \
   --depth 0 \
-  --outline-width 0 \
-  --axis-crop \
-  --diagonal-crop \
-  --x-crop \
-  --color '#00d1d1' \
-  --x-color '#ffffff'
+  --outline-width 0
 
 - for the monochrome one
 > ./logo_renderer.py \
   --svg logo-monochrome.svg \
   --png logo-monochrome.png \
-  --size 2048 \
-  --cog-radius 0.30 \
-  --hole-radius 0.24 \
-  --axis-tooth-height 0.35 \
-  --axis-tooth-width 0.12 \
-  --axis-tooth-taper 0.03 \
-  --axis-tip-radius 0.02 \
-  --diagonal-tooth-height 0.32 \
-  --diagonal-tooth-width 0.30 \
-  --diagonal-tip-radius 0.05 \
-  --x-height 0.42 \
-  --x-width 0.12 \
-  --x-tip-radius 0.03 \
-  --x-gap 0.04 \
   --depth 0 \
   --outline-width 0 \
-  --axis-crop \
-  --diagonal-crop \
-  --x-crop \
   --color '#000000' \
   --x-color '#000000'
 """
@@ -207,7 +147,7 @@ def rounded_axis_tooth(options: "RenderOptions") -> str:
 
 @dataclass(frozen=True)
 class RenderOptions:
-    size: int = 512
+    size: int = 2048
     cog_colour: str = "#00fff1"
     x_colour: str = "#ffffff"
     cog_depth_colour: str = "#007f79"
@@ -216,20 +156,20 @@ class RenderOptions:
     outline_width: float = 0.02
     depth: float = 0.03
     cog_radius: float = 0.30
-    hole_radius: float = 0.22
-    axis_tooth_height: float = 0.35
+    hole_radius: float = 0.24
+    axis_tooth_height: float = 0.36
     axis_tooth_width: float = 0.12
     axis_tooth_taper: float = 0.02
     axis_tip_radius: float = 0.01
     axis_crop: bool = True
     diagonal_tooth_height: float = 0.33
     diagonal_tooth_width: float = 0.30
-    diagonal_tip_radius: float = 0.01
+    diagonal_tip_radius: float = 0.05
     diagonal_crop: bool = True
     x_height: float = 0.42
     x_width: float = 0.12
-    x_gap: float = 0.03
-    x_tip_radius: float = 0.01
+    x_gap: float = 0.04
+    x_tip_radius: float = 0.02
     x_crop: bool = True
 
     def __post_init__(self) -> None:
@@ -482,35 +422,36 @@ def validate(options: RenderOptions) -> None:
 
 
 def parser() -> argparse.ArgumentParser:
+    defaults = RenderOptions()
     result = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     result.add_argument("--svg", type=Path, default=Path("cog-v9.svg"))
     result.add_argument("--png", type=Path, help="also export a transparent PNG with Inkscape")
-    result.add_argument("--size", type=int, default=512, help="SVG and PNG dimensions in pixels")
-    result.add_argument("--color", dest="cog_colour", default="#00fff1", help="cog face colour")
-    result.add_argument("--x-color", dest="x_colour", default="#ffffff", help="X face colour")
-    result.add_argument("--cog-depth-color", dest="cog_depth_colour", default="#007f79")
-    result.add_argument("--x-depth-color", dest="x_depth_colour", default="#808080")
-    result.add_argument("--outline-color", dest="outline_colour", default="#30363b")
-    result.add_argument("--outline-width", type=float, default=0.02)
-    result.add_argument("--depth", type=float, default=0.03)
-    result.add_argument("--cog-radius", type=float, default=0.30)
-    result.add_argument("--hole-radius", type=float, default=0.22)
-    result.add_argument("--axis-tooth-height", type=float, default=0.35)
-    result.add_argument("--axis-tooth-width", type=float, default=0.12)
-    result.add_argument("--axis-tooth-taper", type=float, default=0.02)
-    result.add_argument("--axis-tip-radius", type=float, default=0.01)
-    result.add_argument("--axis-crop", action=argparse.BooleanOptionalAction, default=True)
-    result.add_argument("--diagonal-tooth-height", type=float, default=0.33)
-    result.add_argument("--diagonal-tooth-width", type=float, default=0.30)
-    result.add_argument("--diagonal-tip-radius", type=float, default=0.01)
-    result.add_argument("--diagonal-crop", action=argparse.BooleanOptionalAction, default=True)
-    result.add_argument("--x-height", type=float, default=0.42)
-    result.add_argument("--x-width", type=float, default=0.12)
-    result.add_argument("--x-gap", type=float, default=0.03)
-    result.add_argument("--x-tip-radius", type=float, default=0.01)
-    result.add_argument("--x-crop", action=argparse.BooleanOptionalAction, default=True)
+    result.add_argument("--size", type=int, default=defaults.size, help="SVG and PNG dimensions in pixels")
+    result.add_argument("--color", dest="cog_colour", default=defaults.cog_colour, help="cog face colour")
+    result.add_argument("--x-color", dest="x_colour", default=defaults.x_colour, help="X face colour")
+    result.add_argument("--cog-depth-color", dest="cog_depth_colour", default=defaults.cog_depth_colour)
+    result.add_argument("--x-depth-color", dest="x_depth_colour", default=defaults.x_depth_colour)
+    result.add_argument("--outline-color", dest="outline_colour", default=defaults.outline_colour)
+    result.add_argument("--outline-width", type=float, default=defaults.outline_width)
+    result.add_argument("--depth", type=float, default=defaults.depth)
+    result.add_argument("--cog-radius", type=float, default=defaults.cog_radius)
+    result.add_argument("--hole-radius", type=float, default=defaults.hole_radius)
+    result.add_argument("--axis-tooth-height", type=float, default=defaults.axis_tooth_height)
+    result.add_argument("--axis-tooth-width", type=float, default=defaults.axis_tooth_width)
+    result.add_argument("--axis-tooth-taper", type=float, default=defaults.axis_tooth_taper)
+    result.add_argument("--axis-tip-radius", type=float, default=defaults.axis_tip_radius)
+    result.add_argument("--axis-crop", action=argparse.BooleanOptionalAction, default=defaults.axis_crop)
+    result.add_argument("--diagonal-tooth-height", type=float, default=defaults.diagonal_tooth_height)
+    result.add_argument("--diagonal-tooth-width", type=float, default=defaults.diagonal_tooth_width)
+    result.add_argument("--diagonal-tip-radius", type=float, default=defaults.diagonal_tip_radius)
+    result.add_argument("--diagonal-crop", action=argparse.BooleanOptionalAction, default=defaults.diagonal_crop)
+    result.add_argument("--x-height", type=float, default=defaults.x_height)
+    result.add_argument("--x-width", type=float, default=defaults.x_width)
+    result.add_argument("--x-gap", type=float, default=defaults.x_gap)
+    result.add_argument("--x-tip-radius", type=float, default=defaults.x_tip_radius)
+    result.add_argument("--x-crop", action=argparse.BooleanOptionalAction, default=defaults.x_crop)
     return result
 
 
