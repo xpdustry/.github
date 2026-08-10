@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="2048" height="2048" viewBox="0 0 1 1">
+  <title>Xpdustry cog</title>
+  <defs>
+    <rect id="diagonal-bar" x="0.18" y="0.35" width="0.64" height="0.3" rx="0.05"/>
+    <rect id="x-bar" x="0.08" y="0.44" width="0.84" height="0.12" rx="0.03"/>
+    <rect id="gap-bar" x="0.04" y="0.4" width="0.92" height="0.2" rx="0.07"/>
+    <clipPath id="axis-limit"><circle cx="0.5" cy="0.5" r="0.35"/></clipPath>
+    <clipPath id="diagonal-limit"><circle cx="0.5" cy="0.5" r="0.32"/></clipPath>
+    <clipPath id="x-limit"><circle cx="0.5" cy="0.5" r="0.42"/></clipPath>
+    <clipPath id="gap-limit"><circle cx="0.5" cy="0.5" r="0.46"/></clipPath>
+    <path id="axis-tooth" d="M 0.793939 0.44 L 0.835169 0.451032 A 0.02 0.02 0 0 1 0.85 0.470352 L 0.85 0.529648 A 0.02 0.02 0 0 1 0.835169 0.548968 L 0.793939 0.56 Z"/>
+    <g id="axis-teeth" clip-path="url(#axis-limit)">
+      <use href="#axis-tooth"/>
+      <use href="#axis-tooth" transform="rotate(90 .5 .5)"/>
+      <use href="#axis-tooth" transform="rotate(180 .5 .5)"/>
+      <use href="#axis-tooth" transform="rotate(270 .5 .5)"/>
+    </g>
+    <g id="diagonal-teeth" clip-path="url(#diagonal-limit)">
+      <use href="#diagonal-bar" transform="rotate(45 .5 .5)"/>
+      <use href="#diagonal-bar" transform="rotate(-45 .5 .5)"/>
+    </g>
+    <g id="x-shape" clip-path="url(#x-limit)">
+      <use href="#x-bar" transform="rotate(45 .5 .5)"/>
+      <use href="#x-bar" transform="rotate(-45 .5 .5)"/>
+    </g>
+    <g id="gap-shape" clip-path="url(#gap-limit)">
+      <use href="#gap-bar" transform="rotate(45 .5 .5)"/>
+      <use href="#gap-bar" transform="rotate(-45 .5 .5)"/>
+    </g>
+    <mask id="cog-cutouts" x="0" y="0" width="1" height="1"
+          maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="luminance">
+      <rect width="1" height="1" fill="white"/>
+      <circle cx=".5" cy=".5" r="0.24" fill="black"/>
+      <use href="#gap-shape" fill="black"/>
+    </mask>
+    <g id="cog-shape" mask="url(#cog-cutouts)">
+      <circle cx=".5" cy=".5" r="0.3"/>
+      <use href="#axis-teeth"/>
+      <use href="#diagonal-teeth"/>
+    </g>
+    <filter id="outline-filter" x="-0.02" y="-0.02"
+            width="1.04" height="1.04"
+            filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha"
+                      stdDeviation="0.01" result="soft-edge"/>
+      <feComponentTransfer in="soft-edge" result="expanded-alpha">
+        <feFuncA type="linear" slope="100" intercept="-2"/>
+      </feComponentTransfer>
+      <feFlood flood-color="#30363b" result="colour"/>
+      <feComposite in="colour" in2="expanded-alpha" operator="in"/>
+    </filter>
+    <g id="complete-logo">
+      <g fill="#007979">
+        <use href="#cog-shape" transform="translate(0 0.03)"/>
+        <use href="#cog-shape" transform="translate(0 0.029)"/>
+        <use href="#cog-shape" transform="translate(0 0.028)"/>
+        <use href="#cog-shape" transform="translate(0 0.027)"/>
+        <use href="#cog-shape" transform="translate(0 0.026)"/>
+        <use href="#cog-shape" transform="translate(0 0.025)"/>
+        <use href="#cog-shape" transform="translate(0 0.024)"/>
+        <use href="#cog-shape" transform="translate(0 0.023)"/>
+        <use href="#cog-shape" transform="translate(0 0.022)"/>
+        <use href="#cog-shape" transform="translate(0 0.021)"/>
+        <use href="#cog-shape" transform="translate(0 0.02)"/>
+        <use href="#cog-shape" transform="translate(0 0.019)"/>
+        <use href="#cog-shape" transform="translate(0 0.018)"/>
+        <use href="#cog-shape" transform="translate(0 0.017)"/>
+        <use href="#cog-shape" transform="translate(0 0.016)"/>
+        <use href="#cog-shape" transform="translate(0 0.015)"/>
+        <use href="#cog-shape" transform="translate(0 0.014)"/>
+        <use href="#cog-shape" transform="translate(0 0.013)"/>
+        <use href="#cog-shape" transform="translate(0 0.012)"/>
+        <use href="#cog-shape" transform="translate(0 0.011)"/>
+        <use href="#cog-shape" transform="translate(0 0.01)"/>
+        <use href="#cog-shape" transform="translate(0 0.009)"/>
+        <use href="#cog-shape" transform="translate(0 0.008)"/>
+        <use href="#cog-shape" transform="translate(0 0.007)"/>
+        <use href="#cog-shape" transform="translate(0 0.006)"/>
+        <use href="#cog-shape" transform="translate(0 0.005)"/>
+        <use href="#cog-shape" transform="translate(0 0.004)"/>
+        <use href="#cog-shape" transform="translate(0 0.003)"/>
+        <use href="#cog-shape" transform="translate(0 0.002)"/>
+        <use href="#cog-shape" transform="translate(0 0.001)"/>
+        <use href="#cog-shape" transform="translate(0 0)"/>
+      </g>
+      <g fill="#808080">
+        <use href="#x-shape" transform="translate(0 0.03)"/>
+        <use href="#x-shape" transform="translate(0 0.029)"/>
+        <use href="#x-shape" transform="translate(0 0.028)"/>
+        <use href="#x-shape" transform="translate(0 0.027)"/>
+        <use href="#x-shape" transform="translate(0 0.026)"/>
+        <use href="#x-shape" transform="translate(0 0.025)"/>
+        <use href="#x-shape" transform="translate(0 0.024)"/>
+        <use href="#x-shape" transform="translate(0 0.023)"/>
+        <use href="#x-shape" transform="translate(0 0.022)"/>
+        <use href="#x-shape" transform="translate(0 0.021)"/>
+        <use href="#x-shape" transform="translate(0 0.02)"/>
+        <use href="#x-shape" transform="translate(0 0.019)"/>
+        <use href="#x-shape" transform="translate(0 0.018)"/>
+        <use href="#x-shape" transform="translate(0 0.017)"/>
+        <use href="#x-shape" transform="translate(0 0.016)"/>
+        <use href="#x-shape" transform="translate(0 0.015)"/>
+        <use href="#x-shape" transform="translate(0 0.014)"/>
+        <use href="#x-shape" transform="translate(0 0.013)"/>
+        <use href="#x-shape" transform="translate(0 0.012)"/>
+        <use href="#x-shape" transform="translate(0 0.011)"/>
+        <use href="#x-shape" transform="translate(0 0.01)"/>
+        <use href="#x-shape" transform="translate(0 0.009)"/>
+        <use href="#x-shape" transform="translate(0 0.008)"/>
+        <use href="#x-shape" transform="translate(0 0.007)"/>
+        <use href="#x-shape" transform="translate(0 0.006)"/>
+        <use href="#x-shape" transform="translate(0 0.005)"/>
+        <use href="#x-shape" transform="translate(0 0.004)"/>
+        <use href="#x-shape" transform="translate(0 0.003)"/>
+        <use href="#x-shape" transform="translate(0 0.002)"/>
+        <use href="#x-shape" transform="translate(0 0.001)"/>
+        <use href="#x-shape" transform="translate(0 0)"/>
+      </g>
+      <use href="#cog-shape" fill="#00d1d1"/>
+      <use href="#x-shape" fill="#ffffff"/>
+    </g>
+  </defs>
+  <use href="#complete-logo" filter="url(#outline-filter)"/>
+  <use href="#complete-logo"/>
+</svg>
