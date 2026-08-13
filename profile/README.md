@@ -1,1 +1,1 @@
-Hello from the Xpdustry developer team.
+Hello world!
