@@ -168,7 +168,7 @@ class RenderOptions:
     diagonal_crop: bool = True
     x_height: float = 0.42
     x_width: float = 0.12
-    x_gap: float = 0.04
+    x_gap: float = 0.02
     x_tip_radius: float = 0.02
     x_crop: bool = True
 
